@@ -242,3 +242,82 @@ In either case, you can view the site in `/en/` or `/fr/` (no differences yet).
 
 If this is all working as described, that means `i18n_patterns` and `LocaleMiddleware` are working!
 
+# Step Three: Extend and add Wagtail Models
+
+Before you start adding content and translating it, you'll need to add some models to Wagtail. Wagtail models are similar to [Django models](https://docs.djangoproject.com/en/4.1/topics/db/models/). One key difference is that Wagtail models handle views differently than Django models, but we'll go over that in a bit more detail when you add templates to your project. For right now, you mostly need to know that models provide the essential fields and structures for the content that will be stored in your database.
+
+Many of the steps you'll be doing here have been borrowed from the [Getting Started tutorial](https://docs.wagtail.org/en/stable/getting_started/tutorial.html) for Wagtail.
+
+## Extending the `HomePage` model
+
+Right out of the box, Wagtail comes with a `home` app that provides a blank `HomePage` model. This model will define the home page of your website and what content appears on it. Go to the `home` directory in your project and open up `models.py` in your text editor or IDE. You'll see that all the model currently has in it by default is a `pass` command. So you're going to have to extend it to add content to your home page.
+
+ Since this is a blog site, you should probably tell your readers what the blog is about and give them a reason to read it. All pages in Wagtail have a title by default, so you'll be able to add the blog title easily. So let's extend the `HomePage` model by adding text field for a blog summary to the model.
+
+First, you'll need to add some additional import statements to the top of the page. This statement will import the `RichTextField` (one that let's you use bold, italics, and other formatting) from Wagtail:
+
+```
+
+```
+from wagtail.fields import RichTextField
+ ```
+
+And this statement will import the panel you need to make sure your new field appears in the Wagtail admin as well:
+
+```
+from wagtail.admin.panels import FieldPanel
+```
+
+Once those import statements are added, delete `pass` from your `HomePage` model and replace it with:
+
+```
+summary = RichTextField(blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('summary'),
+    ]
+
+```
+
+Your whole file should look like this right now:
+
+```
+
+from django.db import models
+
+from wagtail.models import Page
+from wagtail.fields import RichTextField
+from wagtail.admin.panels import FieldPanel
+
+
+class HomePage(Page):
+    summary = RichTextField(blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('summary'),
+    ]
+```
+
+Awesome! So what else do we need to have an attractive home page for the blog? An image is something most readers find appealing, so let's add an image to the `HomePage` model as well.
+
+ 
+ 
+ Including an image will also give readers an idea what the blog is about, so let's add an image to the page as well.
+
+
+
+
+
+
+
+Let's make a little profile site like mine. We'll have a title, an image, body, and my latest posts...
+
+## Adding blog models
+
+
+
+## Adding StreamField to the blog
+
+## Adding translatable Snippets
+
+## Adding custom models
