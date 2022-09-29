@@ -91,6 +91,12 @@ Now you have a basic Wagtail website set up. Next, we're going to add a package 
 
 Wagtail Localize is a package that will help you set up a translation workflow for your website. It provides a few different options for translation workflows, but one of the most useful features is the ability to sync content from the main language to other languages.
 
+For this tutorial, we're going to use Wagtail 4.0 and an alpha version of Wagtail Localize. To install that version of Wagtail Localize, enter the following command in your command line:
+
+```
+pip install wagtail-localize==1.3a4
+```
+
 ## But first, a quick bug fix
 
 Before we install Wagtail Localize, you'll need to change a migration because there is currently a bug that creates a table conflict in the database with Wagtail Localize. To prevent that headache, execute these commands in your terminal
