@@ -27,6 +27,8 @@ INSTALLED_APPS = [
     "home",
     "search",
     "blog",
+    "custom_media",
+    "custom_user",
     "wagtail_localize",
     "wagtail_localize.locales",
     "wagtail.contrib.forms",
@@ -175,3 +177,12 @@ WAGTAILSEARCH_BACKENDS = {
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 WAGTAILADMIN_BASE_URL = "http://example.com"
+
+
+# Custom models
+
+WAGTAILIMAGES_IMAGE_MODEL = 'custom_media.CustomImage'
+
+WAGTAILDOCS_DOCUMENT_MODEL = 'custom_media.CustomDocument'
+
+AUTH_USER_MODEL = 'custom_user.User'
