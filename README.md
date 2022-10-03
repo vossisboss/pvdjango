@@ -81,7 +81,7 @@ Follow the prompts in your command line to create your superuser. Once you have 
 ```
 python manage.py runserver
 ```
-If the server has started up without any errors, you can navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000 ) in your web browser to see your Wagtail website. If you've successfully installed Wagtail, you should see a home page with a large teal egg on it.
+If the server has started up without any errors, you can navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) in your web browser to see your Wagtail website. If you've successfully installed Wagtail, you should see a home page with a large teal egg on it.
 
 To test that your superuser works, navigate to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and login with the credentials you created.
 
@@ -609,6 +609,23 @@ Let's take a closer look at some of the comments in the code here. You'll notice
 
 Still, many projects need an image caption field for crediting photographers and artists. So the `CustomImage` model is the best place to do that. Feel free to uncomment the text to add a caption if you would like one. You can make similar change for the `CustomDocument` model too if there is any information that would be useful for you to keep track of with documents. You don't _have_ to add anything though. It's totally optional for completing the rest of this tutorial.
 
+One thing that is not optional though is updating our image model references. Fortunately, we only need to make one update. Navigated to `home/models.py`. Then add the following import statement to the top of your file:
+
+```
+from wagtail import images
+```
+Then update your `main_image` model so that it looks like this:
+
+```
+    main_image = models.ForeignKey(
+        images.get_image_model_string(),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+```
+What you're doing with this code is collecting the string for the name of your CustomImage model so that you can point Wagtail to your custom model instead of the default `wagtailimages` model.
 
 ### Custom User model
 
@@ -643,3 +660,139 @@ Make sure one more time that all of your migration files have been removed. Then
 Since you deleted the database, you're going to have to create a new superuser to access the admin section of Wagtail again. So run `python manage.py createsuperuser` to create a new superuser. Then test it by running `python manage.py runserver` and navigating to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) to log in.
 
 Now you have a good foundation for customizing these critical models. You might not feel like this has added a lot to the project. But trust me, you'll be glad you took these steps further down the line. Next, we're going to add some additional models to our code called `snippets` along with some templates that will help our website look a little nicer.
+
+# Step Four: Adding templates and translatable snippets
+
+Now that we have your models set up and your database has been configured for the data you're planning to use in your blog, we can start focusing more on how things will look on the frontend and how people will interact with your multilingual website.
+
+## Set up your home page
+
+You may have noticed that the pretty moving egg page at [http://127.0.0.1:8000](http://127.0.0.1:8000) has been replaced with a drab "Welcome to your new Wagtail site!" page. This happened because resetting the migrations removed the default home page that was created when you first set up the project. That's okay because you're going to have to create a new home page anyway.
+
+Navigate to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and log in to the backend of the website. On the lefthand menu, click on "Pages" and then click on the little home icon next to "Pages" at the very top of the menu. It should be just about "Welcome to your new Wagtail site!". This will take you to the "Root" menu of Wagtail. In the root section, find the three purple dots to open the action menu and click "Add child page". When you're prompted to choose a page type, choose "Home page".
+
+Now we're (finally) going to add some data to our blog. Feel free to choose your own theme. But if you're not feeling particularly inspired, you can join me in filling out "Badger Blog" for the title and "Musings on Earth's most noble and distinctive mammal" for the summary. You'll need a picture too. Feel free to use this [lovely badger](https://upload.wikimedia.org/wikipedia/commons/4/41/M%C3%A4yr%C3%A4_%C3%84ht%C3%A4ri_4.jpg) from Wikimedia Commons. Click "Choose an image" and then upload the image to Wagtail.
+
+When you're done adding the content, go to the bottom of the page and use the big green button to save your draft. Then click on the arrow next to "Save draft" to open up the publish menu and click "Publish" to publish the page.
+
+Now, if you were to navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) right now, you would still see that ugly default page. That's because we need to tell Wagtail that we have a new homepage. To change that, go to the menu on the lefthand side, click "Settings", and then click "Sites". The "Sites" panel should open up and you'll see one site inside it right now called "localhost".
+
+Click on "localhost" and then scroll down to "Root page". Click on "Choose a different root page" and then choose your new home page from the menu. Click "Save" at the bottom of the page to save your changes.
+
+## Update the home page template
+
+If you were to navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) right now, you'll find that the pretty egg animation has returned. With a home page designated, the default code in `home/templates/home_page.html` is now working again. You're going to update that code though so that you can pull the content you just created into your templates.
+
+Go to `home/templates/home_page.html` and delete everything in the file except for the first line `{% extends "base.html" %}`. Update the file so it looks like this:
+
+```
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block content %}
+
+<h1>{{ page.title }}</h1>
+
+<p>{{page.summary}}</p>
+
+{% image page.main_image max-500x500 %}
+
+{% endblock %}
+```
+Save the file and then reload your homepage. You should now see the title of your blog, the summary, and a beautiful badger (if you chose to go with my badger theme rather than your own).
+
+Now, the summary might look a little funky. And that is because text fields do not print with escaped characters by default. Fortunately, Wagtail comes with a handy filter, among many other [handy filters](https://docs.wagtail.org/en/stable/topics/writing_templates.html#template-tags-and-filters), that can render the text properly. Update the `{{page.summary}}` line so that it is:
+
+```
+<p>{{page.summary|richtext}}</p>
+```
+Refresh the page and the summary text should be displaying properly now.
+
+Before you move on from this task, let's clean your templates and organize things a bit. Navigate to `myblog\templates` and create a new directory in it called `home`. Move `home_page.html` to the new `home` directory. Refresh the page to make sure it still works. The delete the `templates` directory in the `home` app. While you're there, you can also delete the `static` folder in the the `home` app because all that is in it is some CSS for the default home page.
+
+This structure will help you stay organized by keeping all of your templates in one directory. Trust me, any frontend developers you work with will thank you. And then they will find something else to pick on, but that's the way of things.
+
+
+
+## Set up simple blog templates
+
+Now that the home page is set up, let's set up some simple templates for your blog pages as well. First, let's create some content in the backend of Wagtail to work with. Go to http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and click the "Pages" menu then click "Badger Blog" (or whatever title you chose) to open the menu for that page. Click the three purple dots to open the action menu and click "Add child page". Choose the "Blog index page" this time.
+
+Fill out the title and intro line for your blog. I used the oh-so-creative title "Blog" and "The latest badger sightings" if you would like to steal those brilliant lines. Use the big green button at the bottom to "Publish" the page.
+
+Back in the "Badger Blog" section of Wagtail, you should now see a line for your "Blog" page. When you hover over "Blog", a button should appear that says "Add child page." Click the button. Pick "Blog page".
+
+**Note** There is a method for automatically steering users to the correct childpage. That is a bit beyond the scope of this tutorial but if I find a good recipe for it, I'll include a link for it in the resources at the end of this tutorial.
+
+Fill out some content on your blog page. If your creative muse has deserted you to sip margharitas on a beach, then you can use the title "Badgers are brilliant" and the intro line "We have totally underestimated badgers".
+
+Now the body is where you get to play with StreamField for the first time. All you need to do is add one block of content to the body. You can add an image if you want or a text paragaph like:
+
+```
+Here are three reasons badgers are more intelligent than we thought they were:
+
+    1. They use tools
+    2. They can solve puzzles
+    3. They can break out of zoos
+
+```
+After you add your content, use the big green button at the bottom of the page and click "Publish".
+
+Now that you entered some content, let's create some templates to go with it. First, go to `myblog/templates` and create a directory labeled `blog`. In that `blog` directory, create two blank files: `blog_index_page.html` and `blog_page.html`
+
+In `blog_index_page.html`, let's add:
+
+```
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block content %}
+    <h1>{{ page.title }}</h1>
+
+    <div class="intro">{{ page.intro|richtext }}</div>
+
+    {% for post in page.get_children %}
+        <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+        {{ post.specific.intro }}
+        {{ post.specific.body }}
+    {% endfor %}
+
+{% endblock %}
+```
+
+Save that file and then add the following code to `blog_page.html`:
+
+```
+{% extends "base.html" %}
+
+{% block body_class %}template-blogpage{% endblock %}
+
+{% block content %}
+    <h1>{{ page.title }}</h1>
+    <p class="meta">{{ page.date }}</p>
+
+    <div class="intro">{{ page.intro }}</div>
+
+    {{ page.body }}
+
+    <p><a href="{{ page.get_parent.url }}">Return to blog</a></p>
+
+{% endblock %}
+```
+
+Excellent! Now you have some basic templates for your blog content in English that you can work with. Let's work on translating some of it so that we have some content in French to work with as well.
+
+## Setting up your new locale
+
+To set up a locale for French, go to the lefthand menu, click "Settings", then click "Locales". On the righthand side, click the green "Add a locale" button. In the "Language" dropdown menu, choose "French". 
+
+Beneath the dropdown is an option to synchronize content from the main language of your website. Click the green "Enable" button. Check the "Enabled" checkbox and then select "English" from the "Sync from" menu. Click "Save" to save your changes.
+
+Now click "Pages" on the lefthand menu and you'll see there are now _two_ versions of "Badger Blog." One says "English" next to it and the other says "French." Click on the "French" one to edit it. You'll be presented with an option to translate the "Badger Blog" page and all of the pages in the subtree. Check the box to translate all of the pages. Now when you open the "Pages" menu, you should see two copies of your page trees: one labeled "English" and another labeled "French".
+
+Click "Edit" for the french version of the "Badger Blog" Page to edit the content. The page will open up in a translation view. The translation view provides the content in the original 
