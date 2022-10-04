@@ -661,7 +661,7 @@ Since you deleted the database, you're going to have to create a new superuser t
 
 Now you have a good foundation for customizing these critical models. You might not feel like this has added a lot to the project. But trust me, you'll be glad you took these steps further down the line. Next, we're going to add some additional models to our code called `snippets` along with some templates that will help our website look a little nicer.
 
-# Step Four: Adding templates and translatable snippets
+# Step Four: Add templates and translatable content
 
 Now that we have your models set up and your database has been configured for the data you're planning to use in your blog, we can start focusing more on how things will look on the frontend and how people will interact with your multilingual website.
 
@@ -724,7 +724,7 @@ Fill out the title and intro line for your blog. I used the oh-so-creative title
 
 Back in the "Badger Blog" section of Wagtail, you should now see a line for your "Blog" page. When you hover over "Blog", a button should appear that says "Add child page." Click the button. Pick "Blog page".
 
-**Note** There is a method for automatically steering users to the correct childpage. That is a bit beyond the scope of this tutorial but if I find a good recipe for it, I'll include a link for it in the resources at the end of this tutorial.
+**NOTE** There is a method for automatically steering users to the correct childpage. That is a bit beyond the scope of this tutorial but if I find a good recipe for it, I'll include a link for it in the resources at the end of this tutorial.
 
 Fill out some content on your blog page. If your creative muse has deserted you to sip margharitas on a beach, then you can use the title "Badgers are brilliant" and the intro line "We have totally underestimated badgers".
 
@@ -795,4 +795,31 @@ Beneath the dropdown is an option to synchronize content from the main language 
 
 Now click "Pages" on the lefthand menu and you'll see there are now _two_ versions of "Badger Blog." One says "English" next to it and the other says "French." Click on the "French" one to edit it. You'll be presented with an option to translate the "Badger Blog" page and all of the pages in the subtree. Check the box to translate all of the pages. Now when you open the "Pages" menu, you should see two copies of your page trees: one labeled "English" and another labeled "French".
 
-Click "Edit" for the french version of the "Badger Blog" Page to edit the content. The page will open up in a translation view. The translation view provides the content in the original 
+Click "Edit" for the French version of the "Badger Blog" Page to edit the content. The page will open up in a translation view. The translation view provides the content in the original language and provides you with some different options to translate it. Machine translation is an option and we'll play with that one a bit later. Let's explore our default translation options first.
+
+## Translate using PO files
+
+PO files are the file format used by professional translators for translating a variety of structured content, including websites. If you are going to be working with a living, breathing human translator, this could be a good option for your project. The advantages of the PO file is that everything can be translated in one file, and you can send that file to a translator without having to give them access to the admin section of your website.
+
+To use the PO file method, click the "Download PO file" button to download the file. Then either send the file to a translator or use a program like [Poedit](https://poedit.net/download) to edit the file and translate it. Once the file has been translated, you can upload it to your page with the "Upload PO File" button.
+
+Once the file is uploaded, check that there are green checkmarks throughout your page. Click the promote tab too and make sure the slug has been translated as well. Once everything is translated click the big green "Publish in French" button at the bottom to publish the page.
+
+## Translate manually
+
+You can also use the Wagtail Localize plugin to translate content manually as well. This approach is best to use if you decide you are okay with creating a log in for your translator or if someone who will be working on the website regularly is also translating the content. To do manually translation, go through each item on the page and click "Translate". Once you are done adding the translation, click "Save" to save your changes. Do this for each piece of content on the page. Click the "Promote" tab to translate the slug as well. Once you're done, click "Publish in French" at the bottom of the page to publish the page.
+
+**NOTE** Be very careful of using quote marks in your translations. Quote marks in certain languages are different from the quote marks used in HTML. So if there are any links in your content, you need to make sure you're using the right type of quote marks in any HTML included in your translations.
+
+## Syncing content from your main language
+
+Let's try syncing some changes from a blog written in your main language. In the lefthand menu, go to "Pages" then click the arrow to the right until you see "Badgers are brilliant". Play with the language switcher above it if you want to see how easy it is to switch between the languages. Click on the pencil to open the edit page for "Badgers are brilliant".
+
+Scroll down to the body. You're going to add the link to this [YouTube video](https://www.youtube.com/watch?v=c36UNSoJenI) about an escape artist badger to the line "They can break out of zoos." Add the link by highlighting the text and selecting the link option from the menu. When the link menu pops up, click "External link" to add the link to text.
+
+Publish the page with the new changes. After you hit Publish, you'll be returned to the menu for the "Blog" parent page. Hover over "Badgers are brilliant" and click the "More" button. Select "Sync translated pages."
+
+You'll be taken to the French version of the page where your changes will be highlighted in yellow and you can translate them or insert local content. Notice how links and images are separated from the text and can be changed to make them more appealing to a French audience. For example, if you wanted to include a link to a video that was in French or that had French subtitles switched on, you could include a unique link in the French version of the blog. You're welcome to try this by including a link to a different video in the French version. Perhaps this video on [European badgers](https://www.youtube.com/watch?v=PvpNx0Hxtdk) would be more appropriate for your French audience.
+
+All right. Now that we've added some content to your blog and translated it into French, we're going to add a translatable menu and a translatable footer to our website so that you can see how Snippets work in Wagtail as well as how you can translate them.
+
