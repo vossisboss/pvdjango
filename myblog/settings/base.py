@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "blog",
     "custom_media",
     "custom_user",
+    "navigation",
     "wagtail_localize",
     "wagtail_localize.locales",
     "wagtail.contrib.forms",

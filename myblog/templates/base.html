@@ -1,4 +1,4 @@
-{% load static wagtailcore_tags wagtailuserbar %}
+{% load static wagtailcore_tags wagtailuserbar navigation_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,4 +36,6 @@
         {# Override this in templates to add extra javascript #}
         {% endblock %}
     </body>
+
+    {% get_footer_text %}
 </html>

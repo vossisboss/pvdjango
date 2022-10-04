@@ -609,7 +609,19 @@ Let's take a closer look at some of the comments in the code here. You'll notice
 
 Still, many projects need an image caption field for crediting photographers and artists. So the `CustomImage` model is the best place to do that. Feel free to uncomment the text to add a caption if you would like one. You can make similar change for the `CustomDocument` model too if there is any information that would be useful for you to keep track of with documents. You don't _have_ to add anything though. It's totally optional for completing the rest of this tutorial.
 
-One thing that is not optional though is updating our image model references. Fortunately, we only need to make one update. Navigated to `home/models.py`. Then add the following import statement to the top of your file:
+One thing that is not optional though is updating our image model references. First, you'll need to add the following settings to the bottom of your `base.py` settings file:
+
+```
+# Custom models
+
+WAGTAILIMAGES_IMAGE_MODEL = 'custom_media.CustomImage'
+
+WAGTAILDOCS_DOCUMENT_MODEL = 'custom_media.CustomDocument'
+
+```
+
+
+These settings tell Wagtail which custom models you're using. Even with those set though, you're going to have update some references in your code as well. Fortunately, you only need to make one update for this particular project. Navigate to `home/models.py`. Then add the following import statement to the top of your file:
 
 ```
 from wagtail import images
@@ -640,8 +652,19 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     pass
+```
+Then navigate to your `base.py` file in settings and update the `Custom model` section to include the custom user model:
 
 ```
+# Custom models
+
+WAGTAILIMAGES_IMAGE_MODEL = 'custom_media.CustomImage'
+
+WAGTAILDOCS_DOCUMENT_MODEL = 'custom_media.CustomDocument'
+
+AUTH_USER_MODEL = 'custom_user.User'
+```
+
 
 Now save your code and run your first migration command, `python manage.py makemigrations`. You should get an error message that is similar to "Migration admin.0001_initial is applied before its dependency app.0001_initial on database 'default' ". Tables related to the `User` model in Django are some of the very first that are set up when you start a new project. So if you try to apply a custom version of the `User` model after the initial migration for your first app, you're going to get an error.
 
@@ -823,3 +846,6 @@ You'll be taken to the French version of the page where your changes will be hig
 
 All right. Now that we've added some content to your blog and translated it into French, we're going to add a translatable menu and a translatable footer to our website so that you can see how Snippets work in Wagtail as well as how you can translate them.
 
+# Step Five: Add translatable navigation
+
+In this step, you're going to learn about Wagtail Snippets. Snippets are pieces of code that can be used in multiple places across a project. Some common uses for Snippets include author profiles, menus, and footer content. The nice thing about Wagtail is you can use `TranslatableMixin` to make any 
