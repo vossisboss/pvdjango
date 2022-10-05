@@ -161,6 +161,18 @@ WAGTAIL_CONTENT_LANGUAGES = LANGUAGES = [
 ]
 ```
 
+## Add machine translation configuration
+
+Wagtail Localize has a few different options for machine translation. Two common configurations are for Google Cloud Translation and Deepl. Both of those options require setting accounts up with credit cards, so were going to use the dummy translator for this tutorial to show you how things work. But if you want to integrate a machine translator, you can follow the steps in the [Wagtail Localize Documentation](https://www.wagtail-localize.org/how-to/integrations/machine-translation/) to add the configuration for your preferred translator to `base.py`. There is also an integration available for [Pontoon](https://www.wagtail-localize.org/how-to/integrations/pontoon/).
+
+To add the dummy translator, add the following code to your `base.py` file:
+
+```
+WAGTAILLOCALIZE_MACHINE_TRANSLATOR = {
+    "CLASS": "wagtail_localize.machine_translators.dummy.DummyTranslator",
+}
+```
+
 ## Enable `LocaleMiddleware`
 
 Django's `LocaleMiddleware` detects a user's browser language and forwards them to the most appropriate language
@@ -226,8 +238,6 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
 ]
 ```
-
-## Migrate the database
 
 ## Migrate the database
 
