@@ -241,8 +241,6 @@ urlpatterns = [
 
 ## Migrate the database
 
-## Migrate the database
-
 Run the migrate command again to set up the tables for Wagtail Localize in the database:
 
 ```
