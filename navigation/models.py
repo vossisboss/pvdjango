@@ -1,9 +1,11 @@
+from typing_extensions import Required
 from django.db import models
 
 from wagtail.core import blocks
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
+from wagtail.core.fields import StreamField
+from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.fields import RichTextField
-from wagtail.models import TranslatableMixin
+from wagtail.models import Page, TranslatableMixin
 from wagtail.snippets.models import register_snippet
 
 @register_snippet
@@ -26,37 +28,30 @@ class FooterText(TranslatableMixin, models.Model):
 
 
 
-# @register_snippet
-# class MainNavigation (TranslatableMixin, models.Model):
-#     name = models.CharField(max_length=255)
-#     page = blocks.PageChooserBlock(label="Page", required=False)
-#     cta_url = blocks.URLBlock(label="URL", required=False)
+@register_snippet
+class MainNavigation (TranslatableMixin, models.Model):
+    name = models.CharField(max_length=255)
 
-#     panels = [
-#         FieldPanel("body"),
-#     ]
+    menu_text = models.CharField(max_length=255)
+    menu_url = models.URLField()
+    # menu_url = StreamField([
+    #     ('menu_url', blocks.StructBlock([
+    #         ('page', blocks.PageChooserBlock(required = False)),
+    #         ('external_url', blocks.URLBlock(required = False)),
+    #     ])),
+    # ], null = True, use_json_field=True)
 
-#     def __str__(self):
-#         return self.name
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("menu_text"),
+        FieldPanel("menu_url"),
+    ]
 
-#     class Meta:
-#         verbose_name = "Main navigation"
+    def __str__(self):
+        return self.name
 
-# @register_snippet
-# class MainMenu(ClusterableModel):
-
-#     name = models.CharField(max_length=255)
-#     menu_sections = StreamField(
-#         [("menu_section", MainMenuSectionBlock())],
-#     )
-
-#     panels = [
-#         FieldPanel("name"),
-#         StreamFieldPanel("menu_sections", classname="collapsible"),
-#     ]
-
-#     def __str__(self):
-#         return self.name
-
-#     class Meta:
-#         verbose_name = "Main menu"
+    class Meta:
+        verbose_name_plural = "Main navigation"
+        unique_together = [
+            ("translation_key", "locale"),
+        ]

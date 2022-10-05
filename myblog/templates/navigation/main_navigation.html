@@ -1,0 +1,9 @@
+<div class = "navigation">
+    <ul>
+        {% for menu_item in menu_items %}
+            {% if menu_item.localized %}
+               <li><a href = "{{ menu_item.localized.menu_url }}"> {{ menu_item.localized.menu_text }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>

@@ -24,6 +24,10 @@
         {% endblock %}
     </head>
 
+    <header>
+        {% get_main_navigation %}
+    </header>
+
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
 
