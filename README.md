@@ -544,7 +544,7 @@ Next, replace the code in your `BlogPage` class with the following code:
 
 Save your file and then run the migration commands `python manage.py makemigrations` and `python manage.py migrate`. Start up the development server real quick with `python manage.py runserver` then have a look at a blank Blog Page. You'll notice that the "body" section now has a row of blocks for you to choose from. You can experiment with combining blocks if you want to, but keep in mind that we are most likely going to reset our migrations at least once. So don't add any data you care about just yet.
 
-## Adding custom models
+# Step Four: Add custom models
 
 One thing I always like to call a beginner's attention to is custom models. Because Wagtail is built on top of Django, it has the same quirks as Django does when it comes to custom models. In the Django documentation, it says "It’s highly recommended to set up a custom user model, even if the default User model is sufficient for you." This is because creating a custom user model in the middle of a project or with an existing database is a huge hassle. Even very smart people haven't figure out how to create a migration fix for it yet. The ticket to solve this issue has been open for _years_.
 
