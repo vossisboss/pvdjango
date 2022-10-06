@@ -5,7 +5,7 @@
 To complete this tutorial, you should be familiar with the following:
 
 - Writing Python code
-- Entering commands and in the command line
+- Entering commands in the command line
 
 While it's not strictly necessary, you might find that you'll get more out of this tutorial if you complete the [introductory Django tutorial](https://docs.djangoproject.com/en/4.1/intro/tutorial01/) first.
 
@@ -18,6 +18,10 @@ To complete this tutorial, you will need:
 - A text editor or IDE
 - A GitHub account (required for GitPod)
 - Any web browser
+
+## How to use this repository
+
+If you find the length of this README daunting, I've broken up each big Step into separate branches in this repository. Each branch also contains the code you should have at the end of each step. There might be some minor differences in the migration files, so don't worry too much if those are different from the ones I've provided. You can use the terminal to checkout each branch or switch between them using the branch dropdown menu here in GitHub. The code in the `main` branch is the completed code for the tutorial.
 
 # Step One: Set up Wagtail
 
@@ -394,7 +398,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-#### A quick note on project structure
+### A quick note on project structure
 In Wagtail projects, it is generally a good idea to keep related models in separate apps because it makes it a little easier for you to manage changes that affect migrations. Also, it makes it a little easier to decide where to put new code or models. Some Wagtail developers like to use a "core" or "base" app for models that are used across their projects. Others prefer not to use that approach because it can make future migrations a little trickier to manage. Both approaches are valid! For this tutorial though, we're going to use the separate app approach.
 
 Now that you have a blog app added to your project, navigate to `blog/models.py`. We're going to create two new page types for our blog. Wagtail is a CMS that uses a tree structure to organize content. There are parent pages and child pages. The ultimate parent page by default is the Home page. All other page types branch off of the Home page. Then child pages can branch off of those pages too.
@@ -615,7 +619,7 @@ class CustomDocument(AbstractDocument):
     )
 ```
 
-Let's take a closer look at some of the comments in the code here. You'll notice that there is an option to add a `caption` field to the image model. Wagtail doesn't include an image caption for `alt text` by default because the project is very focused on promoting good accessibility practices. Too often [captions fall short](), and the Wagtail maintainers are currently figuring out a better default way to support accessibility. In the meantime, the Wagtail project encourages you to set up accessbility practices that make the most sense for your particular project or organization.
+Let's take a closer look at some of the comments in the code here. You'll notice that there is an option to add a `caption` field to the image model. Wagtail doesn't include an image caption for `alt text` by default because the project is very focused on promoting good accessibility practices. Too often [captions fall short](https://axesslab.com/alt-texts/), and the Wagtail maintainers are currently figuring out a better default way to support accessibility. In the meantime, the Wagtail project encourages you to set up accessbility practices that make the most sense for your particular project or organization.
 
 Still, many projects need an image caption field for crediting photographers and artists. So the `CustomImage` model is the best place to do that. Feel free to uncomment the text to add a caption if you would like one. You can make similar change for the `CustomDocument` model too if there is any information that would be useful for you to keep track of with documents. You don't _have_ to add anything though. It's totally optional for completing the rest of this tutorial.
 
@@ -700,15 +704,34 @@ Now that we have your models set up and your database has been configured for th
 
 ## Set up your home page
 
-You may have noticed that the pretty moving egg page at [http://127.0.0.1:8000](http://127.0.0.1:8000) has been replaced with a drab "Welcome to your new Wagtail site!" page. This happened because resetting the migrations removed the default home page that was created when you first set up the project. That's okay because you're going to have to create a new home page anyway.
+You may have noticed that the pretty moving egg page at [http://127.0.0.1:8000](http://127.0.0.1:8000) has been replaced with a drab "Welcome to your new Wagtail site!" page. 
+![Screenshot of the basic default Wagtail page](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_2.27.45_PM.original.png)
 
-Navigate to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and log in to the backend of the website. On the lefthand menu, click on "Pages" and then click on the little home icon next to "Pages" at the very top of the menu. It should be just about "Welcome to your new Wagtail site!". This will take you to the "Root" menu of Wagtail. In the root section, find the three purple dots to open the action menu and click "Add child page". When you're prompted to choose a page type, choose "Home page".
+This happened because resetting the migrations removed the default home page that was created when you first set up the project. That's okay because you're going to have to create a new home page anyway.
+
+Navigate to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and log in to the backend of the website. On the lefthand menu, click on "Pages" and then click on the little home icon next to "Pages" at the very top of the menu. It should be just above "Welcome to your new Wagtail site!". 
+
+![Screenshot of home icon in Wagtail](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_2.32.42_PM.original.png)
+
+This will take you to the "Root" menu of Wagtail. In the root section, find the three purple dots to open the action menu and click "Add child page".
+
+![Screenshot of the root page menu in Wagtail](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_2.23.41_PM.original.png)
+
+ When you're prompted to choose a page type, choose "Home page".
+
+![Screenshot of the page type selection in Wagtail](https://www.meagenvoss.com/media/images/Screen_Shot_2022-09-29_at_12.08.52_PM.original.png)
 
 Now we're (finally) going to add some data to our blog. Feel free to choose your own theme. But if you're not feeling particularly inspired, you can join me in filling out "Badger Blog" for the title and "Musings on Earth's most noble and distinctive mammal" for the summary. You'll need a picture too. Feel free to use this [lovely badger](https://upload.wikimedia.org/wikipedia/commons/4/41/M%C3%A4yr%C3%A4_%C3%84ht%C3%A4ri_4.jpg) from Wikimedia Commons. Click "Choose an image" and then upload the image to Wagtail.
 
+![Screenshot of home page in Wagtail admin](https://www.meagenvoss.com/media/images/Screen_Shot_2022-09-28_at_9.16.11_PM.original.png)
+
 When you're done adding the content, go to the bottom of the page and use the big green button to save your draft. Then click on the arrow next to "Save draft" to open up the publish menu and click "Publish" to publish the page.
 
+![Screenshot of Wagtail publish button](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-05_at_11.56.07_PM.original.png)
+
 Now, if you were to navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) right now, you would still see that ugly default page. That's because we need to tell Wagtail that we have a new homepage. To change that, go to the menu on the lefthand side, click "Settings", and then click "Sites". The "Sites" panel should open up and you'll see one site inside it right now called "localhost".
+
+![Settings menu in Wagtail](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_2.46.15_PM.original.png)
 
 Click on "localhost" and then scroll down to "Root page". Click on "Choose a different root page" and then choose your new home page from the menu. Click "Save" at the bottom of the page to save your changes.
 
@@ -753,11 +776,13 @@ This structure will help you stay organized by keeping all of your templates in 
 
 Now that the home page is set up, let's set up some simple templates for your blog pages as well. First, let's create some content in the backend of Wagtail to work with. Go to http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and click the "Pages" menu then click "Badger Blog" (or whatever title you chose) to open the menu for that page. Click the three purple dots to open the action menu and click "Add child page". Choose the "Blog index page" this time.
 
+![Screen shot of action menu from home page](https://www.meagenvoss.com/media/images/Screen_Shot_2022-09-28_at_9.04.21_PM.original.png)
+
 Fill out the title and intro line for your blog. I used the oh-so-creative title "Blog" and "The latest badger sightings" if you would like to steal those brilliant lines. Use the big green button at the bottom to "Publish" the page.
 
 Back in the "Badger Blog" section of Wagtail, you should now see a line for your "Blog" page. When you hover over "Blog", a button should appear that says "Add child page." Click the button. Pick "Blog page".
 
-**NOTE** There is a method for automatically steering users to the correct childpage. That is a bit beyond the scope of this tutorial but if I find a good recipe for it, I'll include a link for it in the resources at the end of this tutorial.
+![Screenshot of the Blog page in the list](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_3.47.11_PM.original.png)
 
 Fill out some content on your blog page. If your creative muse has deserted you to sip margharitas on a beach, then you can use the title "Badgers are brilliant" and the intro line "We have totally underestimated badgers".
 
@@ -826,9 +851,15 @@ To set up a locale for French, go to the lefthand menu, click "Settings", then c
 
 Beneath the dropdown is an option to synchronize content from the main language of your website. Click the green "Enable" button. Check the "Enabled" checkbox and then select "English" from the "Sync from" menu. Click "Save" to save your changes.
 
-Now click "Pages" on the lefthand menu and you'll see there are now _two_ versions of "Badger Blog." One says "English" next to it and the other says "French." Click on the "French" one to edit it. You'll be presented with an option to translate the "Badger Blog" page and all of the pages in the subtree. Check the box to translate all of the pages. Now when you open the "Pages" menu, you should see two copies of your page trees: one labeled "English" and another labeled "French".
+![Screenshot showing how to add a locale to Wagtail](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_4.21.46_PM.original.png)
 
-Click "Edit" for the French version of the "Badger Blog" Page to edit the content. The page will open up in a translation view. The translation view provides the content in the original language and provides you with some different options to translate it. Machine translation is an option and we'll play with that one a bit later. Let's explore our default translation options first.
+Now click "Pages" on the lefthand menu and you'll see there are now _two_ versions of "Badger Blog." One says "English" next to it and the other says "French." Click on the "French" one to edit it. You'll be presented with an option to translate the "Badger Blog" page and all of the pages in the subtree. Check the box to translate all of the pages. 
+
+![Screenshot showing the translate subtree option in Wagtail](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_4.23.52_PM.original.png)
+
+Now when you open the "Pages" menu, you should see two copies of your page trees: one labeled "English" and another labeled "French".
+
+Click "Edit" for the French version of the "Badger Blog" Page to edit the content. The page will open up in a translation view. The translation view provides the content in the original language and provides you with some different options to translate it.
 
 ## Translate using PO files
 
@@ -844,6 +875,10 @@ You can also use the Wagtail Localize plugin to translate content manually as we
 
 **NOTE** Be very careful of using quote marks in your translations. Quote marks in certain languages are different from the quote marks used in HTML. So if there are any links in your content, you need to make sure you're using the right type of quote marks in any HTML included in your translations.
 
+## Machine translation
+
+You can also hit the third button on the page to use the machine translation integration you set up earlier. Now since you set up the Wagtail Localize dummy translator, all it will do here is reverse all of the strings on the page. But it will give you an idea how Deepl or Google Cloud Translation would work if you set them up.
+
 ## Syncing content from your main language
 
 Let's try syncing some changes from a blog written in your main language. In the lefthand menu, go to "Pages" then click the arrow to the right until you see "Badgers are brilliant". Play with the language switcher above it if you want to see how easy it is to switch between the languages. Click on the pencil to open the edit page for "Badgers are brilliant".
@@ -851,6 +886,8 @@ Let's try syncing some changes from a blog written in your main language. In the
 Scroll down to the body. You're going to add the link to this [YouTube video](https://www.youtube.com/watch?v=c36UNSoJenI) about an escape artist badger to the line "They can break out of zoos." Add the link by highlighting the text and selecting the link option from the menu. When the link menu pops up, click "External link" to add the link to text.
 
 Publish the page with the new changes. After you hit Publish, you'll be returned to the menu for the "Blog" parent page. Hover over "Badgers are brilliant" and click the "More" button. Select "Sync translated pages."
+
+![Screenshot of syncing translated pages](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_5.17.00_PM.original.png)
 
 You'll be taken to the French version of the page where your changes will be highlighted in yellow and you can translate them or insert local content. Notice how links and images are separated from the text and can be changed to make them more appealing to a French audience. For example, if you wanted to include a link to a video that was in French or that had French subtitles switched on, you could include a unique link in the French version of the blog. You're welcome to try this by including a link to a different video in the French version. Perhaps this video on [European badgers](https://www.youtube.com/watch?v=PvpNx0Hxtdk) would be more appropriate for your French audience.
 
