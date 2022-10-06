@@ -1,4 +1,4 @@
-# Parlez-vous Django? Internatiionalization with Wagtail
+# Parlez-vous Django? Internationalization with Wagtail
 
 ## What you should know
 
@@ -14,7 +14,7 @@ While it's not strictly necessary, you might find that you'll get more out of th
 To complete this tutorial, you will need:
 
 - Python 3.8 or greater
-- Git 
+- Git
 - A text editor or IDE
 - A GitHub account (required for GitPod)
 - Any web browser
@@ -39,10 +39,9 @@ Click the button below to launch Gitpod.
 
 ### _Venv_
 
-If you already have Python installed on your machine, you can create a local virtual environment using `venv`. Open your command line andnavigate to the directory you want to build your project in. Then enter the following commands to creative a virtual environment.
+If you already have Python installed on your machine, you can create a local virtual environment using `venv`. Open your command line and navigate to the directory you want to build your project in. Then enter the following commands to creative a virtual environment.
 
 ```
-python 
 python -m venv env
 source env/bin/activate
 ```
@@ -69,7 +68,7 @@ wagtail start myblog .
 
 Don't forget the `.` at the end of the command. It is telling Wagtail to put all of the files in the current working directory.
 
-Once all of the files are set up, you'll need to enter some commands to set up the test database and all of the migration files that Wagtail needs. You can do that with the `migrate` command.
+Once all of the files are set up, you'll need to enter some commands to set up the test database and apply all the migrations that Wagtail needs. You can do that with the `migrate` command.
 
 ```
 python manage.py migrate
@@ -85,6 +84,7 @@ Follow the prompts in your command line to create your superuser. Once you have 
 ```
 python manage.py runserver
 ```
+
 If the server has started up without any errors, you can navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) in your web browser to see your Wagtail website. If you've successfully installed Wagtail, you should see a home page with a large teal egg on it.
 
 To test that your superuser works, navigate to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and login with the credentials you created.
@@ -110,7 +110,7 @@ python manage.py migrate wagtailcore 0058
 python manage.py migrate
 ```
 
-These commands revert the `wagtailcore 0059` migration back to `wagtailcore 0058` to prevent the table conflict from occurring. This step should hopefully be unnecessary after the bug is fixed.
+These commands revert the `wagtailcore` migrations back to `wagtailcore 0058` to prevent the table conflict from occurring. This step should hopefully be unnecessary after the bug is fixed.
 
 With that fixed, now you are going to make some changes to `base.py` and `urls.py`. Most of the steps you're going to perform next come from the [Wagtail Localize documentation](https://www.wagtail-localize.org/). 
 
@@ -182,7 +182,7 @@ WAGTAILLOCALIZE_MACHINE_TRANSLATOR = {
 Django's `LocaleMiddleware` detects a user's browser language and forwards them to the most appropriate language
 version of the website.
 
-To enable it, insert `'django.middleware.locale.LocaleMiddleware'` into the middleware setting
+To enable it, insert `"django.middleware.locale.LocaleMiddleware"` into the middleware setting
 above `RedirectMiddleware`:
 
 ```python
@@ -199,6 +199,7 @@ MIDDLEWARE = [
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 ```
+
 ## Configure URL paths
 
 Next, you need configure which URL paths are translatable so that Django will prefix them with the language code.
@@ -276,31 +277,29 @@ Right out of the box, Wagtail comes with a `home` app that provides a blank `Hom
 
 First, you'll need to add some additional import statements to the top of the page. This statement will import the `RichTextField` (one that let's you use bold, italics, and other formatting) from Wagtail:
 
-```
+```python
 from wagtail.fields import RichTextField
  ```
 
 And this statement will import the panel you need to make sure your new field appears in the Wagtail admin as well:
 
-```
+```python
 from wagtail.admin.panels import FieldPanel
 ```
 
 Once those import statements are added, delete `pass` from your `HomePage` model and replace it with:
 
-```
-summary = RichTextField(blank=True)
+```python
+    summary = RichTextField(blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('summary'),
     ]
-
 ```
 
 Your whole file should look like this right now:
 
-```
-
+```python
 from django.db import models
 
 from wagtail.models import Page
@@ -318,8 +317,8 @@ class HomePage(Page):
 
 Awesome! So what else do we need to have an attractive home page for the blog? An image is something most readers find appealing, so let's add an image to the `HomePage` model as well. Add the following code beneath your `summary` variable:
 
-```
-main_image = models.ForeignKey(
+```python
+    main_image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
         blank=True,
@@ -329,13 +328,14 @@ main_image = models.ForeignKey(
 ```
 
 And then add another line to `content_panels`:
-```
-FieldPanel('image'),
+
+```python
+FieldPanel('main_image'),
 ```
 
 Your full `models.py` file should like like this now:
 
-```
+```python
 from dataclasses import Field
 from django.db import models
 
@@ -358,7 +358,6 @@ class HomePage(Page):
         FieldPanel('summary'),
         FieldPanel('main_image'),
     ]
-
 ```
 
 Now you have fields for a summary and for adding an image to your home page. To add those fields to the database, run the following migration commands:
@@ -384,7 +383,7 @@ python manage.py startapp blog
 
 Then you need to add that app to `INSTALLED_APPS` in `myblog/settings/base.py`:
 
-```
+```python
 INSTALLED_APPS = [
     "home",
     "search",
@@ -399,13 +398,15 @@ INSTALLED_APPS = [
 ```
 
 ### A quick note on project structure
+
 In Wagtail projects, it is generally a good idea to keep related models in separate apps because it makes it a little easier for you to manage changes that affect migrations. Also, it makes it a little easier to decide where to put new code or models. Some Wagtail developers like to use a "core" or "base" app for models that are used across their projects. Others prefer not to use that approach because it can make future migrations a little trickier to manage. Both approaches are valid! For this tutorial though, we're going to use the separate app approach.
 
 Now that you have a blog app added to your project, navigate to `blog/models.py`. We're going to create two new page types for our blog. Wagtail is a CMS that uses a tree structure to organize content. There are parent pages and child pages. The ultimate parent page by default is the Home page. All other page types branch off of the Home page. Then child pages can branch off of those pages too.
 
-First, you need to create a parent type for the blog. Most Wagtail developers will call these pages "index" pages, so this one will be called `BlogPageIndex`. Add the following code to your `models.py` file in the blog app:
+First, you need to create a parent type for the blog. Most Wagtail developers will call these pages "index" pages, so this one will be called `BlogIndexPage`. Add the following code to your `models.py` file in the blog app:
 
-```
+```python
+from django.db import models
 
 from wagtail.models import Page
 from wagtail.fields import RichTextField
@@ -424,19 +425,19 @@ This is a very simple version of `BlogIndexPage` with only a single `intro` fiel
 
 Next, we need to create a child page called `BlogPage`. Think about the fields you need for a reader to enjoy a blog post. The title is included by default, so what else do you need? Blogs can get pretty messy without dates to organize them, so you'll need a `date` frield for sure. Let's type:
 
-```
+```python
 class BlogPage(Page):
     date = models.DateField("Post date")
 
     content_panels = Page.content_panels + [
         FieldPanel('date'),
-    ]
+    
 
 ```
 
 Let's add an `intro` field to this page type too so that you can use it to give readers a preview of the blog post.
 
-```
+```python
 class BlogPage(Page):
     date = models.DateField("Post date")
     intro = models.CharField(max_length=250)
@@ -451,7 +452,7 @@ Note that `intro` has `max_length` added to it. This provides a character limit 
 
 You'll also need a `body` field to provide a place to put your post content (since creating a blog without a place to put content kind of defeats the purpose of a blog). 
 
-```
+```python
 class BlogPage(Page):
     date = models.DateField("Post date")
     intro = models.CharField(max_length=250)
@@ -468,7 +469,7 @@ class BlogPage(Page):
 
 Now, those fields are a good start for a basic blog. While we're here though, let's take a moment to make the content of your blog searchable. Update `models.py` with this code:
 
-```
+```python
 class BlogPage(Page):
     date = models.DateField("Post date")
     intro = models.CharField(max_length=250)
@@ -488,7 +489,7 @@ class BlogPage(Page):
 
 Then add `from wagtail.search import index` to your import statements so that the whole file looks like this:
 
-```
+```python
 from django.db import models
 
 from wagtail.models import Page
