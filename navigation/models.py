@@ -1,11 +1,8 @@
-from typing_extensions import Required
 from django.db import models
 
-from wagtail.core import blocks
-from wagtail.core.fields import StreamField
 from wagtail.admin.edit_handlers import FieldPanel
 from wagtail.fields import RichTextField
-from wagtail.models import Page, TranslatableMixin
+from wagtail.models import TranslatableMixin
 from wagtail.snippets.models import register_snippet
 
 @register_snippet
@@ -34,12 +31,6 @@ class MainNavigation (TranslatableMixin, models.Model):
 
     menu_text = models.CharField(max_length=255)
     menu_url = models.URLField()
-    # menu_url = StreamField([
-    #     ('menu_url', blocks.StructBlock([
-    #         ('page', blocks.PageChooserBlock(required = False)),
-    #         ('external_url', blocks.URLBlock(required = False)),
-    #     ])),
-    # ], null = True, use_json_field=True)
 
     panels = [
         FieldPanel("name"),

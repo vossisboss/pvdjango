@@ -27,9 +27,6 @@ INSTALLED_APPS = [
     "home",
     "search",
     "blog",
-    "custom_media",
-    "custom_user",
-    "navigation",
     "wagtail_localize",
     "wagtail_localize.locales",
     "wagtail.contrib.forms",
@@ -142,6 +139,7 @@ WAGTAILLOCALIZE_MACHINE_TRANSLATOR = {
     "CLASS": "wagtail_localize.machine_translators.dummy.DummyTranslator",
 }
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -181,12 +179,3 @@ WAGTAILSEARCH_BACKENDS = {
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 WAGTAILADMIN_BASE_URL = "http://example.com"
-
-
-# Custom models
-
-WAGTAILIMAGES_IMAGE_MODEL = 'custom_media.CustomImage'
-
-WAGTAILDOCS_DOCUMENT_MODEL = 'custom_media.CustomDocument'
-
-AUTH_USER_MODEL = 'custom_user.User'
