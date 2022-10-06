@@ -1,24 +1,3 @@
-# Parlez-vous Django? Internatiionalization with Wagtail
-
-## What you should know
-
-To complete this tutorial, you should be familiar with the following:
-
-- Writing Python code
-- Entering commands and in the command line
-
-While it's not strictly necessary, you might find that you'll get more out of this tutorial if you complete the [introductory Django tutorial](https://docs.djangoproject.com/en/4.1/intro/tutorial01/) first.
-
-## Prerequisites
-
-To complete this tutorial, you will need:
-
-- Python 3.8 or greater
-- Git 
-- A text editor or IDE
-- A GitHub account (required for GitPod)
-- Any web browser
-
 # Step One: Set up Wagtail
 
 ## Create a virtual environment
