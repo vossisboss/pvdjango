@@ -1,4 +1,3 @@
-
 # Step Three: Extend and add Wagtail Models
 
 Before you start adding content and translating it, you'll need to add some models to Wagtail. Wagtail models are similar to [Django models](https://docs.djangoproject.com/en/4.1/topics/db/models/). One key difference is that Wagtail models handle views differently than Django models, but we'll go over that in a bit more detail when you add templates to your project. For right now, you mostly need to know that models provide the essential fields and structures for the content that will be stored in your database.
@@ -7,7 +6,7 @@ Many of the steps you'll be doing here have been borrowed from the [Getting Star
 
 ## Extending the `HomePage` model
 
-Right out of the box, Wagtail comes with a `home` app that provides a blank `HomePage` model. This model will define the home page of your website and what content appears on it. Go to the `home` directory in your project and open up `models.py` in your text editor or IDE. You'll see that all the model currently has in it by default is a `pass` command. So you're going to have to extend it to add content to your home page.
+Right out of the box, Wagtail comes with a `home` app that provides a blank `HomePage` model. This model will define the home page of your website and what content appears on it. Go to the `home` directory in your project and open up `models.py`. You'll see that all the model currently has in it by default is a `pass` command. So you're going to have to extend it to add content to your home page.
 
  Since this is a blog site, you should probably tell your readers what the blog is about and give them a reason to read it. All pages in Wagtail have a title by default, so you'll be able to add the blog title easily. So let's extend the `HomePage` model by adding text field for a blog summary to the model.
 
@@ -67,7 +66,7 @@ main_image = models.ForeignKey(
 
 And then add another line to `content_panels`:
 ```
-FieldPanel('image'),
+FieldPanel('main_image'),
 ```
 
 Your full `models.py` file should like like this now:
@@ -134,9 +133,15 @@ INSTALLED_APPS = [
     # ...
 ]
 ```
+<br/>
 
-### A quick note on project structure
+* * *
+## :memo: A quick note on project structure :memo:
 In Wagtail projects, it is generally a good idea to keep related models in separate apps because it makes it a little easier for you to manage changes that affect migrations. Also, it makes it a little easier to decide where to put new code or models. Some Wagtail developers like to use a "core" or "base" app for models that are used across their projects. Others prefer not to use that approach because it can make future migrations a little trickier to manage. Both approaches are valid! For this tutorial though, we're going to use the separate app approach.
+
+* * *
+
+<br/>
 
 Now that you have a blog app added to your project, navigate to `blog/models.py`. We're going to create two new page types for our blog. Wagtail is a CMS that uses a tree structure to organize content. There are parent pages and child pages. The ultimate parent page by default is the Home page. All other page types branch off of the Home page. Then child pages can branch off of those pages too.
 
@@ -268,18 +273,20 @@ To show you StreamField in action, you're going to create a simple StreamField i
 
 ```
 from wagtail.fields import StreamField
+from wagtail.embeds.blocks import EmbedBlock
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 ```
 
 
-Next, replace the code in your `BlogPage` class with the following code:
+Next, replace the `body` definition from `RichTextField` in your `BlogPage` class with the following code:
 
 ```
     body = StreamField([
         ('heading', blocks.CharBlock(form_classname="title")),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
+        ('embed', embed = EmbedBlock(max_width=800, max_height=400)),
     ], use_json_field=True)
 ```
 
