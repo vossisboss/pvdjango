@@ -1,11 +1,11 @@
-# Parlez-vous Django? Internatiionalization with Wagtail
+# Parlez-vous Django? Internationalization with Wagtail
 
 ## What you should know
 
 To complete this tutorial, you should be familiar with the following:
 
 - Writing Python code
-- Entering commands in the command line
+- Entering commands and in the command line
 
 While it's not strictly necessary, you might find that you'll get more out of this tutorial if you complete the [introductory Django tutorial](https://docs.djangoproject.com/en/4.1/intro/tutorial01/) first.
 
@@ -18,10 +18,6 @@ To complete this tutorial, you will need:
 - A text editor or IDE
 - A GitHub account (required for GitPod)
 - Any web browser
-
-## How to use this repository
-
-If you find the length of this README daunting, I've broken up each big Step into separate branches in this repository. Each branch also contains the code you should have at the end of each step. There might be some minor differences in the migration files, so don't worry too much if those are different from the ones I've provided. You can use the terminal to checkout each branch or switch between them using the branch dropdown menu here in GitHub. The code in the `main` branch is the completed code for the tutorial.
 
 # Step One: Set up Wagtail
 
@@ -39,7 +35,7 @@ Click the button below to launch Gitpod.
 
 ### _Venv_
 
-If you already have Python installed on your machine, you can create a local virtual environment using `venv`. Open your command line andnavigate to the directory you want to build your project in. Then enter the following commands to creative a virtual environment.
+If you already have Python installed on your machine, you can create a local virtual environment using `venv`. Open your command line and navigate to the directory you want to build your project in. Then enter the following commands to creative a virtual environment.
 
 ```
 python 
@@ -85,15 +81,41 @@ Follow the prompts in your command line to create your superuser. Once you have 
 ```
 python manage.py runserver
 ```
-If the server has started up without any errors, you can navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) in your web browser to see your Wagtail website. If you've successfully installed Wagtail, you should see a home page with a large teal egg on it.
+If the server has started up without any errors, you can navigate to [http://127.0.0.1:8000 ](http://127.0.0.1:8000 ) in your web browser to see your Wagtail website. If you've successfully installed Wagtail, you should see a home page with a large teal egg on it.
 
 To test that your superuser works, navigate to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and login with the credentials you created.
 
 Now you have a basic Wagtail website set up. Next, we're going to add a package that will help you organize and translate content across different languages and locales.
 
+<br />
+
+* * *
+
+## :memo: A quick note for Gitpod users :memo:
+
+To log into the Wagtail backend, you're going to have to add a line of code to your `dev.py` file in settings. Navigate to `myblog/settings/dev.py` and add the following line of code to your file:
+
+```
+CSRF_TRUSTED_ORIGINS = ['https://*.gitpod.io']
+```
+<br />
+
 # Step Two: Install and configure Wagtail Localize
 
 Wagtail Localize is a package that will help you set up a translation workflow for your website. It provides a few different options for translation workflows, but one of the most useful features is the ability to sync content from the main language to other languages.
+
+
+## First, a quick migration update
+
+Before we install Wagtail Localize, you'll need to change a migration because there is currently a bug that creates a table conflict in the database with Wagtail Localize. To prevent that headache, execute thise command in your terminal
+
+```
+python manage.py migrate wagtailcore 0058
+```
+
+Do NOT, I repeat, **DO NOT** do a regular migration after executing this command until after you add the configuration for Wagtail Localize. This command reverts the `wagtailcore` migrations back to `wagtailcore 0058` to prevent a table conflict from occurring. This step should hopefully be unnecessary after the next Wagtail release.
+
+## Install the Wagtail Localize package
 
 For this tutorial, we're going to use Wagtail 4.0 and an alpha version of Wagtail Localize. To install that version of Wagtail Localize, enter the following command in your command line:
 
@@ -101,18 +123,7 @@ For this tutorial, we're going to use Wagtail 4.0 and an alpha version of Wagtai
 pip install wagtail-localize==1.3a4
 ```
 
-## But first, a quick bug fix
-
-Before we install Wagtail Localize, you'll need to change a migration because there is currently a bug that creates a table conflict in the database with Wagtail Localize. To prevent that headache, execute these commands in your terminal
-
-```
-python manage.py migrate wagtailcore 0058
-python manage.py migrate
-```
-
-These commands revert the `wagtailcore 0059` migration back to `wagtailcore 0058` to prevent the table conflict from occurring. This step should hopefully be unnecessary after the bug is fixed.
-
-With that fixed, now you are going to make some changes to `base.py` and `urls.py`. Most of the steps you're going to perform next come from the [Wagtail Localize documentation](https://www.wagtail-localize.org/). 
+With that update in place and the package installed, now you are going to make some changes to `base.py` and `urls.py`. Most of the steps you're going to perform next come from the [Wagtail Localize documentation](https://www.wagtail-localize.org/). 
 
 
 ## Add Wagtail Localize to INSTALLED_APPS
@@ -182,7 +193,7 @@ WAGTAILLOCALIZE_MACHINE_TRANSLATOR = {
 Django's `LocaleMiddleware` detects a user's browser language and forwards them to the most appropriate language
 version of the website.
 
-To enable it, insert `'django.middleware.locale.LocaleMiddleware'` into the middleware setting
+To enable it, insert `"django.middleware.locale.LocaleMiddleware"` into the middleware setting
 above `RedirectMiddleware`:
 
 ```python
@@ -203,7 +214,7 @@ MIDDLEWARE = [
 
 Next, you need configure which URL paths are translatable so that Django will prefix them with the language code.
 
-Open `tutorial/urls.py` in your text editor. You'll see that there are two groups of URL patterns with an
+Open `myblog/urls.py`. You'll see that there are two groups of URL patterns with an
 `if settings.DEBUG:` block in between them.
 
 The patterns that need to be made translatable are:
@@ -212,7 +223,7 @@ The patterns that need to be made translatable are:
 - `path("", include(wagtail_urls)),`
 
 To make these translatable, move the 'search/' pattern into the second block, above the `wagtail_urls` pattern. Then,
-replace the square brakets around that block with
+replace the square brackets around that block with
 [`i18n_patterns`](https://docs.djangoproject.com/en/3.1/topics/i18n/translation/#django.conf.urls.i18n.i18n_patterns):
 
 ```python
@@ -243,6 +254,8 @@ urlpatterns = [
 ]
 ```
 
+At this point, you might want to take a quick peak at the `urls.py` file in the [step-2](https://github.com/vossisboss/pvdjango/tree/step-2) branch to make sure they match. This step can be a little tricky.
+
 ## Migrate the database
 
 Run the migrate command again to set up the tables for Wagtail Localize in the database:
@@ -254,9 +267,9 @@ python manage.py migrate
 ## Check your site
 
 
-Go back to `http://127.0.0.1:8000`. If your browser is configured for English or any other language except French,
-you should be redirected to `http://127.0.0.1:8000/en/`.
-If your browser is configured in French, you should be redirected to `http://127.0.0.1:8000/fr/`.
+Go back to `http://localhost:8000`. If your browser is configured for English or any other language except French,
+you should be redirected to `http://localhost:8000/en/`.
+If your browser is configured in French, you should be redirected to `http://localhost:8000/fr/`.
 
 In either case, you can view the site in `/en/` or `/fr/` (no differences yet).
 
@@ -270,7 +283,7 @@ Many of the steps you'll be doing here have been borrowed from the [Getting Star
 
 ## Extending the `HomePage` model
 
-Right out of the box, Wagtail comes with a `home` app that provides a blank `HomePage` model. This model will define the home page of your website and what content appears on it. Go to the `home` directory in your project and open up `models.py` in your text editor or IDE. You'll see that all the model currently has in it by default is a `pass` command. So you're going to have to extend it to add content to your home page.
+Right out of the box, Wagtail comes with a `home` app that provides a blank `HomePage` model. This model will define the home page of your website and what content appears on it. Go to the `home` directory in your project and open up `models.py`. You'll see that all the model currently has in it by default is a `pass` command. So you're going to have to extend it to add content to your home page.
 
  Since this is a blog site, you should probably tell your readers what the blog is about and give them a reason to read it. All pages in Wagtail have a title by default, so you'll be able to add the blog title easily. So let's extend the `HomePage` model by adding text field for a blog summary to the model.
 
@@ -330,7 +343,7 @@ main_image = models.ForeignKey(
 
 And then add another line to `content_panels`:
 ```
-FieldPanel('image'),
+FieldPanel('main_image'),
 ```
 
 Your full `models.py` file should like like this now:
@@ -397,9 +410,15 @@ INSTALLED_APPS = [
     # ...
 ]
 ```
+<br/>
 
-### A quick note on project structure
+* * *
+## :memo: A quick note on project structure :memo:
 In Wagtail projects, it is generally a good idea to keep related models in separate apps because it makes it a little easier for you to manage changes that affect migrations. Also, it makes it a little easier to decide where to put new code or models. Some Wagtail developers like to use a "core" or "base" app for models that are used across their projects. Others prefer not to use that approach because it can make future migrations a little trickier to manage. Both approaches are valid! For this tutorial though, we're going to use the separate app approach.
+
+* * *
+
+<br/>
 
 Now that you have a blog app added to your project, navigate to `blog/models.py`. We're going to create two new page types for our blog. Wagtail is a CMS that uses a tree structure to organize content. There are parent pages and child pages. The ultimate parent page by default is the Home page. All other page types branch off of the Home page. Then child pages can branch off of those pages too.
 
@@ -531,18 +550,20 @@ To show you StreamField in action, you're going to create a simple StreamField i
 
 ```
 from wagtail.fields import StreamField
+from wagtail.embeds.blocks import EmbedBlock
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
 ```
 
 
-Next, replace the code in your `BlogPage` class with the following code:
+Next, replace the `body` definition from `RichTextField` in your `BlogPage` class with the following code:
 
 ```
     body = StreamField([
         ('heading', blocks.CharBlock(form_classname="title")),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
+        ('embed', embed = EmbedBlock(max_width=800, max_height=400)),
     ], use_json_field=True)
 ```
 
