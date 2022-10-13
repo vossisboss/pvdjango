@@ -3,10 +3,11 @@ from django.db import models
 from wagtail.models import Page
 from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel
+from wagtail.search import index
 from wagtail.fields import StreamField
+from wagtail.embeds.blocks import EmbedBlock
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
-from wagtail.search import index
 
 
 class BlogIndexPage(Page):
@@ -23,6 +24,7 @@ class BlogPage(Page):
         ('heading', blocks.CharBlock(form_classname="title")),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
+        ('embed', EmbedBlock(max_width=800, max_height=400)),
     ], use_json_field=True)
 
     search_fields = Page.search_fields + [

@@ -69,9 +69,7 @@ class CustomDocument(AbstractDocument):
     )
 ```
 
-Let's take a closer look at some of the comments in the code here. You'll notice that there is an option to add a `caption` field to the image model. Wagtail doesn't include an image caption for `alt text` by default because the project is very focused on promoting good accessibility practices. Too often [captions fall short](https://axesslab.com/alt-texts/), and the Wagtail maintainers are currently figuring out a better default way to support accessibility. In the meantime, the Wagtail project encourages you to set up accessbility practices that make the most sense for your particular project or organization.
-
-Still, many projects need an image caption field for crediting photographers and artists. So the `CustomImage` model is the best place to do that. Feel free to uncomment the text to add a caption if you would like one. You can make similar change for the `CustomDocument` model too if there is any information that would be useful for you to keep track of with documents. You don't _have_ to add anything though. It's totally optional for completing the rest of this tutorial.
+Let's take a closer look at some of the comments in the code here. You'll notice that there is an option to add a `caption` field to the image model. Wagtail doesn't include an image caption for `alt text` by default. Many projects need an image caption field for crediting photographers and artists. So the `CustomImage` model is the best place to do that. Feel free to uncomment the text to add a caption if you would like one. You can make similar change for the `CustomDocument` model too if there is any information that would be useful for you to keep track of with documents. You don't _have_ to add anything though. It's totally optional for completing the rest of this tutorial.
 
 One thing that is not optional though is updating our image model references. First, you'll need to add the following settings to the bottom of your `base.py` settings file:
 
@@ -130,7 +128,7 @@ AUTH_USER_MODEL = 'custom_user.User'
 ```
 
 
-Now save your code and run your first migration command, `python manage.py makemigrations`. You should get an error message that is similar to "Migration admin.0001_initial is applied before its dependency app.0001_initial on database 'default' ". Tables related to the `User` model in Django are some of the very first that are set up when you start a new project. So if you try to apply a custom version of the `User` model after the initial migration for your first app, you're going to get an error.
+Now save your code and run the migration commands `python manage.py makemigrations` and `python manage.py migrate`. You should get an error message that is similar to "Migration admin.0001_initial is applied before its dependency app.0001_initial on database 'default' ". Tables related to the `User` model in Django are some of the very first that are set up when you start a new project. So if you try to apply a custom version of the `User` model after the initial migration for your first app, you're going to get an error.
 
 How do we fix this then? There are a few different appraoches you can take. Because your project is still in development though and you're currently using the default sqlite database for working on it, one of the easiest approaches for beginners to learn is to reset the migrations.
 
@@ -140,7 +138,7 @@ There are multiple approaches to resetting migrations too. But for this project,
 2. Delete all of the files in the folder except for `__init.py__`.
 3. Open the `pycache` folder in the `migrations` folder and delete all of the files there as well.
 
-Repeat this process for the `home` app and the `myblog` app. There shouldn't be any migration files in `custom_media` or `custom_user` yet but you can doublecheck that if you want. Next, find your database. It should have a name like `db.sqlite3`. Delete your database file as well.
+Repeat this process for the `home` app. There shouldn't be any migration files in `custom_media` or `custom_user` yet but you can doublecheck that if you want. Next, find your database. It should have a name like `db.sqlite3`. Delete your database file as well.
 
 Make sure one more time that all of your migration files have been removed. Then run your first migration command `python manage.py makemigrations` to create the new migrations you need. If you receive an error, delete all of the migration files and the database again. Be extra sure the you removed the `pycache` files in each app as well. If there is no error, then run `python manage.py migrate` to create fresh migrations in your database.
 
