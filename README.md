@@ -14,7 +14,7 @@ Click the button below to launch Gitpod.
 
 ### _Venv_
 
-If you already have Python installed on your machine, you can create a local virtual environment using `venv`. Open your command line andnavigate to the directory you want to build your project in. Then enter the following commands to creative a virtual environment.
+If you already have Python installed on your machine, you can create a local virtual environment using `venv`. Open your command line and navigate to the directory you want to build your project in. Then enter the following commands to creative a virtual environment.
 
 ```
 python 
@@ -66,3 +66,15 @@ To test that your superuser works, navigate to [http://127.0.0.1:8000/admin](htt
 
 Now you have a basic Wagtail website set up. Next, we're going to add a package that will help you organize and translate content across different languages and locales.
 
+<br />
+
+* * *
+
+## :memo: A quick note for Gitpod users :memo:
+
+To log into the Wagtail backend, you're going to have to add a line of code to your `dev.py` file in settings. Navigate to `myblog/settings/dev.py` and add the following line of code to your file:
+
+```
+CSRF_TRUSTED_ORIGINS = ['https://*.gitpod.io']
+```
+<br />
