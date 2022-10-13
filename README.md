@@ -758,7 +758,7 @@ Click on "localhost" and then scroll down to "Root page". Click on "Choose a dif
 
 If you were to navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) right now, you'll find that the pretty egg animation has returned. With a home page designated, the default code in `home/templates/home_page.html` is now working again. You're going to update that code though so that you can pull the content you just created into your templates.
 
-Go to `home/templates/home_page.html` and delete everything in the file except for the first line `{% extends "base.html" %}`. Update the file so it looks like this:
+Go to `home/templates/home/home_page.html` and delete everything in the file except for the first line `{% extends "base.html" %}`. Update the file so it looks like this:
 
 ```
 {% extends "base.html" %}
@@ -793,17 +793,17 @@ This structure will help you stay organized by keeping all of your templates in 
 
 ## Set up simple blog templates
 
-Now that the home page is set up, let's set up some simple templates for your blog pages as well. First, let's create some content in the backend of Wagtail to work with. Go to http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and click the "Pages" menu then click "Badger Blog" (or whatever title you chose) to open the menu for that page. Click the three purple dots to open the action menu and click "Add child page". Choose the "Blog index page" this time.
+Now that the home page is set up, let's set up some simple templates for your blog pages as well. First, let's create some content in the backend of Wagtail to work with. Go to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and click the "Pages" menu then click "Badger Blog" (or whatever title you chose) to open the menu for that page. Click the three purple dots to open the action menu and click "Add child page". Choose the "Blog index page" this time.
 
 ![Screen shot of action menu from home page](https://www.meagenvoss.com/media/images/Screen_Shot_2022-09-28_at_9.04.21_PM.original.png)
 
-Fill out the title and intro line for your blog. I used the oh-so-creative title "Blog" and "The latest badger sightings" if you would like to steal those brilliant lines. Use the big green button at the bottom to "Publish" the page.
+ Fill out the title and intro line for your blog. I used the oh-so-creative title "Blog" and "The latest badger sightings" if you would like to steal those brilliant lines. Use the big green button at the bottom to "Publish" the page.
 
 Back in the "Badger Blog" section of Wagtail, you should now see a line for your "Blog" page. When you hover over "Blog", a button should appear that says "Add child page." Click the button. Pick "Blog page".
 
 ![Screenshot of the Blog page in the list](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_3.47.11_PM.original.png)
 
-Fill out some content on your blog page. If your creative muse has deserted you to sip margharitas on a beach, then you can use the title "Badgers are brilliant" and the intro line "We have totally underestimated badgers".
+Fill out some content on your blog page. If your creative muse has deserted you to sip margharitas on a beach, then you can add today's date, use the title "Badgers are brilliant" and the intro line "We have totally underestimated badgers".
 
 Now the body is where you get to play with StreamField for the first time. All you need to do is add one block of content to the body. You can add an image if you want or a text paragaph like:
 
@@ -862,7 +862,14 @@ Save that file and then add the following code to `blog_page.html`:
 {% endblock %}
 ```
 
-Excellent! Now you have some basic templates for your blog content in English that you can work with. Let's work on translating some of it so that we have some content in French to work with as well.
+Excellent! Now you have some basic templates for your blog content in English that you can work with. Let's have a quick look at your content by checking that it works. In the Wagtail admin, navigate to "Pages" then click "Badger Blog". You should see your "Blog" page listed like this:
+
+![Screenshot of Wagtail showing Badger Blog listing](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-12_at_10.19.28_PM.original.png)
+
+Hover over the "Blog" listing to make the buttons appear then click "View live" to see what your `BlogIndex` page looks like. You should be able to click on your blog article and open up your "Badgers are brilliant" blog then navigate back to your "Blog" page. The "Home" page and the "Blog" page aren't connected yet. Don't worry, we'll get there.
+
+
+First, let's work on translating some of this content so that we have some content in French to work with as well.
 
 ## Setting up your new locale
 
@@ -872,13 +879,18 @@ Beneath the dropdown is an option to synchronize content from the main language 
 
 ![Screenshot showing how to add a locale to Wagtail](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_4.21.46_PM.original.png)
 
-Now click "Pages" on the lefthand menu and you'll see there are now _two_ versions of "Badger Blog." One says "English" next to it and the other says "French." Click on the "French" one to edit it. You'll be presented with an option to translate the "Badger Blog" page and all of the pages in the subtree. Check the box to translate all of the pages. 
+Now click "Pages" on the lefthand menu and you'll see there are now _two_ versions of "Badger Blog." One says "English" next to it and the other says "French." You might also find two copies of the "Welcome to Wagtail!" page. Feel free to delete those or ignore them. They are not important anymore. 
+
+
+Click on the "French" version of "Badger Blog" to edit it. You'll be presented with an option to translate the "Badger Blog" page and all of the pages in the subtree. Check the box to translate all of the pages. 
 
 ![Screenshot showing the translate subtree option in Wagtail](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_4.23.52_PM.original.png)
 
 Now when you open the "Pages" menu, you should see two copies of your page trees: one labeled "English" and another labeled "French".
 
 Click "Edit" for the French version of the "Badger Blog" Page to edit the content. The page will open up in a translation view. The translation view provides the content in the original language and provides you with some different options to translate it.
+
+![Screenshot of the initial translation view for Badger Blog](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-13_at_6.58.01_AM.original.png)
 
 ## Translate using PO files
 
@@ -896,11 +908,18 @@ You can also use the Wagtail Localize plugin to translate content manually as we
 
 ## Machine translation
 
-You can also hit the third button on the page to use the machine translation integration you set up earlier. Now since you set up the Wagtail Localize dummy translator, all it will do here is reverse all of the strings on the page. But it will give you an idea how Deepl or Google Cloud Translation would work if you set them up.
+You can also hit the third button on the page to use the machine translation integration you set up earlier. Now since you set up the Wagtail Localize dummy translator, all it will do here is reverse all of the strings on the page. But it will give you an idea how Deepl or Google Cloud Translation would work if you set them up. If you use this option for your translation, you'll need to click back into the page and publish the results by clicking the "Publish in French" button.
+
+## Translate and publish your pages
+
+Using whichever method you prefer, go through and translate your "Blog" page as well as your "Badgers are brilliant" article. Be sure to publish each one of those pages after you finish adding your translations.
 
 ## Syncing content from your main language
 
-Let's try syncing some changes from a blog written in your main language. In the lefthand menu, go to "Pages" then click the arrow to the right until you see "Badgers are brilliant". Play with the language switcher above it if you want to see how easy it is to switch between the languages. Click on the pencil to open the edit page for "Badgers are brilliant".
+Let's try syncing some changes from a blog written in your main language. In the lefthand menu, go to "Pages" then click the arrow to the right until you see "Badgers are brilliant". Play with the language switcher in the admin above it if you want to see how easy it is to switch between the languages. Click on the pencil to open the edit page for "Badgers are brilliant".
+
+![Screenshot of an example of the admin language switcher](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-13_at_7.07.57_AM.original.png)
+
 
 Scroll down to the body. You're going to add the link to this [YouTube video](https://www.youtube.com/watch?v=c36UNSoJenI) about an escape artist badger to the line "They can break out of zoos." Add the link by highlighting the text and selecting the link option from the menu. When the link menu pops up, click "External link" to add the link to text.
 
@@ -908,7 +927,7 @@ Publish the page with the new changes. After you hit Publish, you'll be returned
 
 ![Screenshot of syncing translated pages](https://www.meagenvoss.com/media/images/Screen_Shot_2022-10-03_at_5.17.00_PM.original.png)
 
-You'll be taken to the French version of the page where your changes will be highlighted in yellow and you can translate them or insert local content. Notice how links and images are separated from the text and can be changed to make them more appealing to a French audience. For example, if you wanted to include a link to a video that was in French or that had French subtitles switched on, you could include a unique link in the French version of the blog. You're welcome to try this by including a link to a different video in the French version. Perhaps this video on [European badgers](https://www.youtube.com/watch?v=PvpNx0Hxtdk) would be more appropriate for your French audience.
+After you set up the sync, navigate to the French version of the page. Your changes to the content will be highlighted in yellow and you can translate them or insert local content. Notice how links and images are separated from the text and can be changed to make them more appealing to a French audience. For example, if you wanted to include a link to a video that was in French or that had French subtitles switched on, you could include a unique link in the French version of the blog. You're welcome to try this by including a link to a different video in the French version. Perhaps this video on [European badgers](https://www.youtube.com/watch?v=PvpNx0Hxtdk) would be more appropriate for your French audience.
 
 All right. Now that we've added some content to your blog and translated it into French, we're going to add a translatable menu and a translatable footer to our website so that you can see how Snippets work in Wagtail as well as how you can translate them.
 
@@ -922,6 +941,23 @@ To follow the separate apps structure, you're going to create a new app for all 
 
 ```
 python manage.py startapp navigation
+```
+
+You'll need to update your `INSTALLED_APPS` in `myblog/settings/base.py` so that the top of it looks like this:
+
+```
+INSTALLED_APPS = [
+    "home",
+    "search",
+    "blog",
+    "custom_media",
+    "custom_user",
+    "navigation",
+    "wagtail_localize.locales",
+    "wagtail.contrib.forms",
+    "wagtail.contrib.redirects",
+    # ...
+]
 ```
 
 You'll use this app to store the models related to your translatable navigation snippets as well as some template tags that we'll use to help display the correct text for each locale. Curious what template tags are? You'll find out soon.
@@ -960,7 +996,7 @@ class FooterText(TranslatableMixin, models.Model):
 
 ```
 
-Let's look at the different pieces. In setting up the class, you're telling `FooterText` to call on `TranslatableMixin`and `models.Model`. In the next lines, you're telling Wagtail, the body of the footer will include one `RichTextField` and the field will be rendered in one panel labeled "body".
+Let's look at the different pieces. In setting up the class, you're telling `FooterText` to call on `TranslatableMixin` and `models.Model`. In the next lines, you're telling Wagtail, the body of the footer will include one `RichTextField` and the field will be rendered in one panel labeled "body".
 
 The next few lines are a little different from setting up `Page` models in Wagail. Unlike pages, which include titles by default, Snippets need to have names given to them. You can either set them up to be named by users in the admin interface or you can hard code a name like you just did here with `return "Footer text" `. You'll get to see an example of the other naming approach when we code the navigation menu.
 
@@ -987,7 +1023,7 @@ Since the template tag is related to navigation, go ahead and add a new director
 ```
 from django import template
 
-from navigation.models import FooterText
+from navigation.models import FooterText, MainNavigation
 
 register = template.Library()
 ```
@@ -1025,7 +1061,7 @@ With this logic in place, now you can create templates for pulling the data onto
 
 You'll notice that the `richtext` filter is being applied again. Just like for the pages, this is to make sure that all of the characters in the rich text field display properly.
 
-Now that you have a bit of code to display the footer, you can use the template tag you created to add this bit of code to your `base.html` file. Go to `templates.html` and update the statement at the top of the file so that it says:
+Now that you have a bit of code to display the footer, you can use the template tag you created to add this bit of code to your `base.html` file. Go to `myblog/templates/base.html` and update the statement at the top of the file so that it says:
 
 ```
 {% load static wagtailcore_tags wagtailuserbar navigation_tags %}
@@ -1148,8 +1184,8 @@ Wagtail was created to provide a backend framework that works well with as many 
 
 Marketing people have high expectations, and the default options in Wagtail don't typically satisfy them. So try adding one of the packages that expands your SEO options in Wagtail. The two most popular packages that are available include:
 
-[wagtail-metadata](https://github.com/neon-jungle/wagtail-metadata)
-[wagtail-seo](https://github.com/coderedcorp/wagtail-seo)
+- [wagtail-metadata](https://github.com/neon-jungle/wagtail-metadata)
+- [wagtail-seo](https://github.com/coderedcorp/wagtail-seo)
 
 ### Experiment with adding different elements from the Wagtail Bakery Demo
 
@@ -1157,7 +1193,7 @@ The [Wagtail Bakery Demo](https://github.com/wagtail/bakerydemo) is an example p
 
 ### Experiment with StreamField blocks
 
-There is a whole list of [default blocks](https://docs.wagtail.org/en/stable/reference/streamfield/blocks.html) you can use in Wagtail. You can also combine these blocks in custom arrangements with [StructBlock](https://docs.wagtail.org/en/stable/topics/streamfield.html#structblock). If the default blocks are quite what you need, you can even add [custom blocks](https://docs.wagtail.org/en/stable/advanced_topics/customisation/streamfield_blocks.html#custom-streamfield-blocks) to your project. StreamField goes about as far as your imagination goes!
+There is a whole list of [default blocks](https://docs.wagtail.org/en/stable/reference/streamfield/blocks.html) you can use in Wagtail. You can also combine these blocks in custom arrangements with [StructBlock](https://docs.wagtail.org/en/stable/topics/streamfield.html#structblock). If the default blocks aren't quite what you need, you can even add [custom blocks](https://docs.wagtail.org/en/stable/advanced_topics/customisation/streamfield_blocks.html#custom-streamfield-blocks) to your project. StreamField goes about as far as your imagination goes!
 
 ## Final words
 
