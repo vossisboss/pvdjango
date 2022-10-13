@@ -2,24 +2,26 @@
 
 Wagtail Localize is a package that will help you set up a translation workflow for your website. It provides a few different options for translation workflows, but one of the most useful features is the ability to sync content from the main language to other languages.
 
+
+## First, a quick migration update
+
+Before we install Wagtail Localize, you'll need to change a migration because there is currently a bug that creates a table conflict in the database with Wagtail Localize. To prevent that headache, execute thise command in your terminal
+
+```
+python manage.py migrate wagtailcore 0058
+```
+
+Do NOT, I repeat, **DO NOT** do a regular migration after executing this command until after you add the configuration for Wagtail Localize. This command reverts the `wagtailcore` migrations back to `wagtailcore 0058` to prevent a table conflict from occurring. This step should hopefully be unnecessary after the next Wagtail release.
+
+## Install the Wagtail Localize package
+
 For this tutorial, we're going to use Wagtail 4.0 and an alpha version of Wagtail Localize. To install that version of Wagtail Localize, enter the following command in your command line:
 
 ```
 pip install wagtail-localize==1.3a4
 ```
 
-## But first, a quick bug fix
-
-Before we install Wagtail Localize, you'll need to change a migration because there is currently a bug that creates a table conflict in the database with Wagtail Localize. To prevent that headache, execute these commands in your terminal
-
-```
-python manage.py migrate wagtailcore 0058
-python manage.py migrate
-```
-
-These commands revert the `wagtailcore 0059` migration back to `wagtailcore 0058` to prevent the table conflict from occurring. This step should hopefully be unnecessary after the bug is fixed.
-
-With that fixed, now you are going to make some changes to `base.py` and `urls.py`. Most of the steps you're going to perform next come from the [Wagtail Localize documentation](https://www.wagtail-localize.org/). 
+With that update in place and the package installed, now you are going to make some changes to `base.py` and `urls.py`. Most of the steps you're going to perform next come from the [Wagtail Localize documentation](https://www.wagtail-localize.org/). 
 
 
 ## Add Wagtail Localize to INSTALLED_APPS
@@ -89,7 +91,7 @@ WAGTAILLOCALIZE_MACHINE_TRANSLATOR = {
 Django's `LocaleMiddleware` detects a user's browser language and forwards them to the most appropriate language
 version of the website.
 
-To enable it, insert `'django.middleware.locale.LocaleMiddleware'` into the middleware setting
+To enable it, insert `"django.middleware.locale.LocaleMiddleware"` into the middleware setting
 above `RedirectMiddleware`:
 
 ```python
@@ -110,7 +112,7 @@ MIDDLEWARE = [
 
 Next, you need configure which URL paths are translatable so that Django will prefix them with the language code.
 
-Open `tutorial/urls.py` in your text editor. You'll see that there are two groups of URL patterns with an
+Open `myblog/urls.py`. You'll see that there are two groups of URL patterns with an
 `if settings.DEBUG:` block in between them.
 
 The patterns that need to be made translatable are:
@@ -119,7 +121,7 @@ The patterns that need to be made translatable are:
 - `path("", include(wagtail_urls)),`
 
 To make these translatable, move the 'search/' pattern into the second block, above the `wagtail_urls` pattern. Then,
-replace the square brakets around that block with
+replace the square brackets around that block with
 [`i18n_patterns`](https://docs.djangoproject.com/en/3.1/topics/i18n/translation/#django.conf.urls.i18n.i18n_patterns):
 
 ```python
@@ -150,6 +152,8 @@ urlpatterns = [
 ]
 ```
 
+At this point, you might want to take a quick peak at the `urls.py` file in the [step-2](https://github.com/vossisboss/pvdjango/tree/step-2) branch to make sure they match. This step can be a little tricky.
+
 ## Migrate the database
 
 Run the migrate command again to set up the tables for Wagtail Localize in the database:
@@ -161,9 +165,9 @@ python manage.py migrate
 ## Check your site
 
 
-Go back to `http://127.0.0.1:8000`. If your browser is configured for English or any other language except French,
-you should be redirected to `http://127.0.0.1:8000/en/`.
-If your browser is configured in French, you should be redirected to `http://127.0.0.1:8000/fr/`.
+Go back to `http://localhost:8000`. If your browser is configured for English or any other language except French,
+you should be redirected to `http://localhost:8000/en/`.
+If your browser is configured in French, you should be redirected to `http://localhost:8000/fr/`.
 
 In either case, you can view the site in `/en/` or `/fr/` (no differences yet).
 
