@@ -286,7 +286,7 @@ Next, replace the `body` definition from `RichTextField` in your `BlogPage` clas
         ('heading', blocks.CharBlock(form_classname="title")),
         ('paragraph', blocks.RichTextBlock()),
         ('image', ImageChooserBlock()),
-        ('embed', embed = EmbedBlock(max_width=800, max_height=400)),
+        ('embed', EmbedBlock(max_width=800, max_height=400)),
     ], use_json_field=True)
 ```
 
