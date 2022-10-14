@@ -10,6 +10,23 @@ To follow the separate apps structure, you're going to create a new app for all 
 python manage.py startapp navigation
 ```
 
+You'll need to update your `INSTALLED_APPS` in `myblog/settings/base.py` so that the top of it looks like this:
+
+```
+INSTALLED_APPS = [
+    "home",
+    "search",
+    "blog",
+    "custom_media",
+    "custom_user",
+    "navigation",
+    "wagtail_localize.locales",
+    "wagtail.contrib.forms",
+    "wagtail.contrib.redirects",
+    # ...
+]
+```
+
 You'll use this app to store the models related to your translatable navigation snippets as well as some template tags that we'll use to help display the correct text for each locale. Curious what template tags are? You'll find out soon.
 
 ## Add a translatable footer model
@@ -46,7 +63,7 @@ class FooterText(TranslatableMixin, models.Model):
 
 ```
 
-Let's look at the different pieces. In setting up the class, you're telling `FooterText` to call on `TranslatableMixin`and `models.Model`. In the next lines, you're telling Wagtail, the body of the footer will include one `RichTextField` and the field will be rendered in one panel labeled "body".
+Let's look at the different pieces. In setting up the class, you're telling `FooterText` to call on `TranslatableMixin` and `models.Model`. In the next lines, you're telling Wagtail, the body of the footer will include one `RichTextField` and the field will be rendered in one panel labeled "body".
 
 The next few lines are a little different from setting up `Page` models in Wagail. Unlike pages, which include titles by default, Snippets need to have names given to them. You can either set them up to be named by users in the admin interface or you can hard code a name like you just did here with `return "Footer text" `. You'll get to see an example of the other naming approach when we code the navigation menu.
 
@@ -73,7 +90,7 @@ Since the template tag is related to navigation, go ahead and add a new director
 ```
 from django import template
 
-from navigation.models import FooterText
+from navigation.models import FooterText, MainNavigation
 
 register = template.Library()
 ```
@@ -111,7 +128,7 @@ With this logic in place, now you can create templates for pulling the data onto
 
 You'll notice that the `richtext` filter is being applied again. Just like for the pages, this is to make sure that all of the characters in the rich text field display properly.
 
-Now that you have a bit of code to display the footer, you can use the template tag you created to add this bit of code to your `base.html` file. Go to `templates.html` and update the statement at the top of the file so that it says:
+Now that you have a bit of code to display the footer, you can use the template tag you created to add this bit of code to your `base.html` file. Go to `myblog/templates/base.html` and update the statement at the top of the file so that it says:
 
 ```
 {% load static wagtailcore_tags wagtailuserbar navigation_tags %}
@@ -157,9 +174,25 @@ This code is very similar to the code you used for the footer snippet. One diffe
 
 ## Add a template tag for the navigation menu
 
-Just like for the footer, you're going to add a template tag for the main navigation menu. Only with this template tag, you're going to collect all of the items for the menu rather than the first one. Open `navigtation/templatetags/navigation_tags.py` and add the following code beneath the code for your footer template tag:
+Just like for the footer, you're going to add a template tag for the main navigation menu. Only with this template tag, you're going to collect all of the items for the menu rather than the first one, and then you're going to use a function to filter them. Open `navigtation/templatetags/navigation_tags.py` and add the following code above the code for your footer template tag:
 
 ```
+def filter_nav_for_locale(cls, locale):
+    menu_items = None
+
+    try:
+        menu_items = cls.objects.filter(locale=locale)
+    except cls.DoesNotExist:
+        pass
+
+    if not menu_items:
+        try:
+            menu_items = cls.objects.filter(locale=default_language())
+        except cls.DoesNotExist:
+            pass
+
+    return menu_items
+
 @register.inclusion_tag("navigation/main_navigation.html", takes_context=True)
 def get_main_navigation(context):
     menu_items = []
@@ -171,7 +204,7 @@ def get_main_navigation(context):
     }
 ```
 
-You could narrow down the objects to `.localized` objects in the template tag here if you wanted to. But I want to demonstrate how you can select `.localized` objects in the template as well. So let's look at how to do that in the next section.
+You could narrow down the objects to `.localized` objects in the template tag here if you wanted to rather than using `Locale`. But I want to demonstrate how you can select `.localized` objects in the template as well. So let's look at how to do that in the next section.
 
 ## Add a template for the navigation menu
 
@@ -199,7 +232,9 @@ Now you need to add the template tag to `base.html`. Insert this code after the 
 </header>
 ```
 
-Save all of your changes if you haven't already and then run `python manage.py runserver`. Navigate to your home page at [http://127.0.0.1:8000/en](http://127.0.0.1:8000/en) and confirm that your menu is displaying properly. Now navigate to [http://127.0.0.1:8000/fr](http://127.0.0.1:8000/fr) and you should see the same menu displayed in French.
+Save all of your changes if you haven't already and then run `python manage.py runserver`. Navigate to your home page at [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin). Go to "Snippets" in the lefthand menu and choose "Main Navigation". Click "Add main navigation" to add a menu item. If you need some inspiration, you can name your first item "Home" with menu text "Home" and the menu URL "http://127.0.0.1:8000". You'll also want to add an item for your blog with the name "Blog", the menu text "Blog" and the URL "http://127.0.0.1:8000/blog." After adding these items, navigate to  [http://127.0.0.1:8000/en](http://127.0.0.1:8000/en) and confirm that your menu is displaying properly. 
+
+Now, go back to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and go back to the "Main Navigation" section of "Snippets". Use the same "Translate" button you used for the footer content to translate your items to French. Conveniently, "Blog" in French is "Blog." You will want to change the text for "Home" to "Accueil" though. After you save each translated item, navigate to [http://127.0.0.1:8000/fr](http://127.0.0.1:8000/fr) and you should see the same menu displayed in French.
 
 ## Add a language switcher
 
