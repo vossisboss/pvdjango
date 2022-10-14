@@ -1107,9 +1107,25 @@ This code is very similar to the code you used for the footer snippet. One diffe
 
 ## Add a template tag for the navigation menu
 
-Just like for the footer, you're going to add a template tag for the main navigation menu. Only with this template tag, you're going to collect all of the items for the menu rather than the first one. Open `navigtation/templatetags/navigation_tags.py` and add the following code beneath the code for your footer template tag:
+Just like for the footer, you're going to add a template tag for the main navigation menu. Only with this template tag, you're going to collect all of the items for the menu rather than the first one, and then you're going to use a function to filter them. Open `navigtation/templatetags/navigation_tags.py` and add the following code above the code for your footer template tag:
 
 ```
+def filter_nav_for_locale(cls, locale):
+    menu_items = None
+
+    try:
+        menu_items = cls.objects.filter(locale=locale)
+    except cls.DoesNotExist:
+        pass
+
+    if not menu_items:
+        try:
+            menu_items = cls.objects.filter(locale=default_language())
+        except cls.DoesNotExist:
+            pass
+
+    return menu_items
+
 @register.inclusion_tag("navigation/main_navigation.html", takes_context=True)
 def get_main_navigation(context):
     menu_items = []
@@ -1121,7 +1137,7 @@ def get_main_navigation(context):
     }
 ```
 
-You could narrow down the objects to `.localized` objects in the template tag here if you wanted to. But I want to demonstrate how you can select `.localized` objects in the template as well. So let's look at how to do that in the next section.
+You could narrow down the objects to `.localized` objects in the template tag here if you wanted to rather than using `Locale`. But I want to demonstrate how you can select `.localized` objects in the template as well. So let's look at how to do that in the next section.
 
 ## Add a template for the navigation menu
 
@@ -1149,7 +1165,9 @@ Now you need to add the template tag to `base.html`. Insert this code after the 
 </header>
 ```
 
-Save all of your changes if you haven't already and then run `python manage.py runserver`. Navigate to your home page at [http://127.0.0.1:8000/en](http://127.0.0.1:8000/en) and confirm that your menu is displaying properly. Now navigate to [http://127.0.0.1:8000/fr](http://127.0.0.1:8000/fr) and you should see the same menu displayed in French.
+Save all of your changes if you haven't already and then run `python manage.py runserver`. Navigate to your home page at [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin). Go to "Snippets" in the lefthand menu and choose "Main Navigation". Click "Add main navigation" to add a menu item. If you need some inspiration, you can name your first item "Home" with menu text "Home" and the menu URL "http://127.0.0.1:8000". You'll also want to add an item for your blog with the name "Blog", the menu text "Blog" and the URL "http://127.0.0.1:8000/blog." After adding these items, navigate to  [http://127.0.0.1:8000/en](http://127.0.0.1:8000/en) and confirm that your menu is displaying properly. 
+
+Now, go back to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and go back to the "Main Navigation" section of "Snippets". Use the same "Translate" button you used for the footer content to translate your items to French. Conveniently, "Blog" in French is "Blog." You will want to change the text for "Home" to "Accueil" though. After you save each translated item, navigate to [http://127.0.0.1:8000/fr](http://127.0.0.1:8000/fr) and you should see the same menu displayed in French.
 
 ## Add a language switcher
 
