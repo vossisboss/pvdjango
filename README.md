@@ -1216,3 +1216,12 @@ There is a whole list of [default blocks](https://docs.wagtail.org/en/stable/ref
 ## Final words
 
 Thank you for going through this tutorial with me! I hope you found it useful. If you have any questions, don't hesitate to reach out to me on [Twitter](https://twitter.com/meagenvoss) or through the [Wagtail Slack Community](https://wagtail.org/slack).
+
+## Acknowledgments
+
+I would like to thank some folks for helping make this tutorial and workshop possible.
+
+- **Katie McLaughlin ([@glasnt](https://github.com/glasnt))** for an amazingly thorough review and test run that caught so, so many things that could be improved. Thank you Katie!
+- **Dan Bragis ([@zerolab](https://github.com/zerolab))** for taking the time to walk through all of my Wagtail Localize questions and template questions.
+- **Chris Shaw ([@chris48s](https://github.com/chris48s/))** for patiently and thoroughly answering the Wagtail Localize questions I forgot to ask Dan as well as helping me learn the finer points of `.get()` and `.filter()`.
+- **Thibaud Colas ([@thibaudcolas](https://github.com/glasnt))** for spotting typos like a hawk and correcting my language around Django migrations.
